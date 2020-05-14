@@ -32,6 +32,12 @@ gulp.task("default",async ()=>{
     });
 
     
+    gulp.watch("./src/img/**/*",async ()=>{
+        gulp.src("./src/img/**/*")
+        .pipe(gulp.dest("D:\\phpStudy\\WWW\\pingduoduo\\img"));
+    });
+
+    
     //把php文件夹里的所有代码原封不动的复制到服务器目录下
     gulp.watch("./src/php/**/*",async ()=>{
         gulp.src("./src/php/**/*")

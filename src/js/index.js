@@ -1,3 +1,16 @@
+// 获取cookie显示欢迎语或者登录按钮
+function showWelcomeAndLogin(){
+    let userName = getCookie("userName");
+    if(userName!=null){
+        $("#userSpan").html(userName);
+        $("#welcome-box").show();
+        $("#login-box").hide();
+    }else{
+        $("#welcome-box").hide();
+        $("#login-box").show();
+    }
+}
+
 // 获取文具类型的商品
 function getWenJu(){
     $.get("./php/getGoodsListNew.php",{
@@ -27,5 +40,16 @@ function getWenJu(){
 }
 
 $(function(){
+    showWelcomeAndLogin();
     getWenJu();
+    $("#btnLogin").click(function(){
+        location.href="login.html";
+    });
+    $("#btnLogout").click(function(){
+        removeCookie("userName");
+        showWelcomeAndLogin();
+    });
+    $("#btnReg").click(function(){
+        location.href="reg.html";
+    });
 })

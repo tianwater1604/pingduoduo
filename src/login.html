@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>拼多多</title>
+</head>
+
+<body>
+    <div>
+        用户名：<input id="userId" type="text" value="18991274261">*<span id="userMsg"></span><br />
+        密码：<input id="passId" type="password"><br />
+        <input id="btnLogin" type="button" value="登录">
+        <div id="msg"></div>
+    </div>
+</body>
+
+</html>
+<script src="js/jquery-3.2.1.min.js"></script>
+<script src="js/cookieTools.js"></script>
+<script>
+    $("#btnLogin").click(function () {
+        //一、前端验证
+        if($("#userId").val()==""){
+            alert("用户名不能为空");
+            return;
+        }
+        if($("#passId").val()==""){
+            alert("密码不能为空");
+            return;
+        }
+
+        // 二、后端处理
+        $.post("./php/login.php", {
+            "username": $("#userId").val(),
+            "userpass": $("#passId").val()
+        }, show);
+    });
+
+    function show(data) {
+        if (data == "success") {
+            addCookie("userName",$("#userId").val(),7);
+            let count = 6; //倒数的秒数
+            let myTimer = setInterval(() => {
+                count--;
+                if (count == 0) {
+                    window.clearInterval(myTimer);
+                    location.href = "index.html";
+                    //    return; 
+                }
+                $("#msg").css({ "color": "green" }).html(`登录成功，${count}秒后，自动跳转到<a href='index.html'>首页</a>`);
+            }, 1000);
+        } else if (data = "fail") {
+            $("#msg").css({ "color": "red" }).html("登录失败，用户名或者密码不正确");
+        }
+    }
+
+</script>
