@@ -11,6 +11,10 @@ use Aliyun\Api\Sms\Request\V20170525\SendSmsRequest;
 use Aliyun\Api\Sms\Request\V20170525\SendBatchSmsRequest;
 use Aliyun\Api\Sms\Request\V20170525\QuerySendDetailsRequest;
 
+date_default_timezone_set("UTC");
+
+ //  启动 Session
+ session_start();
 
 /*
  * 生成不重复的随机数字
@@ -70,9 +74,9 @@ class SmsDemo
         $domain = "dysmsapi.aliyuncs.com";
 
         // TODO 此处需要替换成开发者自己的AK (https://ak-console.aliyun.com/)
-        $accessKeyId = "LTAI4FbiujacmCbrwVeiyNHw"; // AccessKeyId
+        $accessKeyId = "?????"; // AccessKeyId
 
-        $accessKeySecret = "zcAebVWxN7kSTg5HOLEleCug3acCrg"; // AccessKeySecret
+        $accessKeySecret = "????"; // AccessKeySecret
 
         // 暂时不支持多Region
         $region = "cn-hangzhou";
@@ -115,10 +119,12 @@ class SmsDemo
 
         // 必填，设置模板CODE，应严格按"模板CODE"填写, 请参考: https://dysms.console.aliyun.com/dysms.htm#/develop/template
         $request->setTemplateCode("SMS_185242294");
-
+        $code = getRandNumber(); //随机验证码
+        
+        $_SESSION["code"]  =  $code; //把随机产生的验证码保存在session，供其它php中使用
         // 可选，设置模板参数, 假如模板中存在变量需要替换则为必填项
         $request->setTemplateParam(json_encode(array(  // 短信模板中字段的值
-            "code"=> getRandNumber(),
+            "code"=> $code,
             "product"=>"dsd"
         ), JSON_UNESCAPED_UNICODE));
 
@@ -222,21 +228,23 @@ class SmsDemo
 set_time_limit(0);
 header('Content-Type: text/plain; charset=utf-8');
 
-// 接收前端的手机号码：
-$phoneNumber = $_GET['phoneNumber'];
+// 1、接收前端的手机号码：
+$phoneNumber = $_GET['phonenumber'];
 
+// 2、发送随机产生的验证码（并且保存到session）
 $response = SmsDemo::sendSms($phoneNumber);
-echo "发送短信(sendSms)接口返回的结果:\n";
-print_r($response);
+// echo "发送短信(sendSms)接口返回的结果:\n";
+echo json_encode($response);
+// print_r($response);
 
 sleep(2);
 
-$response = SmsDemo::sendBatchSms();
-echo "批量发送短信(sendBatchSms)接口返回的结果:\n";
-print_r($response);
+// $response = SmsDemo::sendBatchSms();
+// echo "批量发送短信(sendBatchSms)接口返回的结果:\n";
+// print_r($response);
 
-sleep(2);
+// sleep(2);
 
-$response = SmsDemo::querySendDetails();
-echo "查询短信发送情况(querySendDetails)接口返回的结果:\n";
-print_r($response);
+// $response = SmsDemo::querySendDetails();
+// echo "查询短信发送情况(querySendDetails)接口返回的结果:\n";
+// print_r($response);

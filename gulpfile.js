@@ -44,4 +44,16 @@ gulp.task("default",async ()=>{
         .pipe(gulp.dest("D:\\phpStudy\\WWW\\pingduoduo\\php"));
     });
 
+    // 短信验证码的php代码
+    gulp.watch("./src/sms/**/*",async ()=>{
+        gulp.src("./src/sms/**/*")
+        .pipe(gulp.dest("D:\\phpStudy\\WWW\\pingduoduo\\sms"));
+    });
+
+    // json文件
+    gulp.watch("./src/json/**/*",async ()=>{
+        gulp.src("./src/json/**/*")
+        .pipe(gulp.dest("D:\\phpStudy\\WWW\\pingduoduo\\json"));
+    });
+
 });

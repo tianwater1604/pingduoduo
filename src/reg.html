@@ -19,6 +19,8 @@
         密码：<input id="passId" type="password"><br/>
         重复密码：<input id="passId" type="password"><br/>
         验证码:<input id="userCode" type="text"><img class="code" src="img/02.jfif" /> <br/>
+        手机号码:<input id="phoneId" type="text"><input id="btnSend" type="button" value="发送短信"><br/>
+        短信验证码:<input id="phoneCode" type="text"><br/>
         <input id="btnReg" type="button" value="注册">
         <div id="msg"></div>
     </div>
@@ -26,6 +28,24 @@
 </html>
 <script src="js/jquery-3.2.1.min.js"></script>
 <script>
+
+function sendCode(){
+    $.get("./sms/api_demo/SmsDemo.php",{
+        "phonenumber":$("#phoneId").val()
+    },function(data){
+        console.log(data);
+        data = JSON.parse(data);
+        if(data.Code=="OK"){ //说明发送成功
+            $("#msg").html("发送成功");
+        }else{
+            $("#msg").html("发送失败");
+        }        
+        setTimeout(function(){
+            $("#msg").html("");
+        },1000);
+    });
+}
+
 let isCheckUser = false; 
 // 验证用户名
 function checkUser(cb){
@@ -57,10 +77,12 @@ function checkUser(cb){
 function reg(){
     $.post("./php/addUser.php",{
         "username":$("#userId").val(),
-        "userpass":$("#passId").val()
-        // "code":arr[index]
+        "userpass":$("#passId").val(),
+        "phoneCode":$("#phoneCode").val()
     },function(data){
-        if(data=="success"){
+        if(data=="codefail"){
+            $("#msg").html("短信验证码错误");
+        }else if(data=="success"){
             $("#msg").html("注册成功，请<a href='login.html'>登录</a>");
         }else if(data=="fail"){
             $("#msg").css({
@@ -86,6 +108,9 @@ function getCode(){
 }
 
 $(function(){
+    $("#btnSend").click(function(){
+        sendCode();
+    });
     getCode();
     $(".code").click(function(){
         getCode();

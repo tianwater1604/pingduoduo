@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>拼多多</title>
+    
+</head>
+<body>
+        <select id="province">
+            <option value="">北京</option>
+            <option value="">上海</option>
+            <option value="">广州</option>
+        </select>
+        <select id="city">
+            <option value="">朝阳</option>
+            <option value="">海淀</option>
+        </select>        
+        <!-- <select id="xian">
+            <option value="">朝阳</option>
+            <option value="">海淀</option>
+        </select> -->
+</body>
+
+</html>
+<script src="js/jquery-3.2.1.min.js"></script>
+<script>
+
+// 主流程
+$(function(){
+    // 1、获取省市数据，并显示省的内容，和第一个省对应市的内容
+    getData();
+    // 2、当省发生变化时，改变市的内容
+    $("#province").change(function(){
+        // 修改 $("#city")里的option
+        showCity(this.value);
+    });   
+    // 如果再有一级，那么再写change事件
+    // $("#city").change(function(){
+    // });
+})
+
+// 保存后端发来的省市数据
+let datas = null;
+
+// 获取省市的数据
+function getData(){
+    $.getJSON("./json/myCity.json",function(data){
+        datas = data;
+        // 1）、显示省
+        showProvince();
+        // 2）、显示第一个省对应的市
+        showCity($("#province").val());
+    });
+}
+
+// 显示省
+function showProvince(){
+    let htmlStr="";
+    for(let key in datas){
+        htmlStr += `<option>${key}</option>`;
+    }
+    $("#province").html(htmlStr);
+}
+
+// 显示市
+function showCity(province){ //北京
+    let arr =  datas[province];
+    let htmlStr = "";    
+    arr.forEach(item => {
+        htmlStr += `<option value="">${item["市名"]}</option>`;
+    });    
+    $("#city").html(htmlStr);
+}
+
+</script>
